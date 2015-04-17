@@ -1,6 +1,8 @@
 package com.aman.simpletodo;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class TodoActivity extends ActionBarActivity {
+public class TodoActivity extends ActionBarActivity implements EditItemFragment.OnEditListener {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
@@ -58,26 +60,34 @@ public class TodoActivity extends ActionBarActivity {
             }
         });
 
+//        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
+//                i.putExtra("position", position);
+//                i.putExtra("text", lvItems.getItemAtPosition(position).toString());
+//                startActivityForResult(i, REQUEST_CODE);
+//            }
+//        });
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(TodoActivity.this, EditItemActivity.class);
-                i.putExtra("position", position);
-                i.putExtra("text", lvItems.getItemAtPosition(position).toString());
-                startActivityForResult(i, REQUEST_CODE);
-            }
+                FragmentManager fm = getSupportFragmentManager();
+                EditItemFragment editDialog = EditItemFragment.newInstance(position,
+                        lvItems.getItemAtPosition(position).toString());
+                editDialog.show(fm, "edit_item_dialog");            }
         });
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            int position = data.getIntExtra("position", 0);
-            String text = data.getStringExtra("text");
-            items.set(position, text);
-            itemsAdapter.notifyDataSetChanged();
-            writeItems();
-        }
-    }
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+//            int position = data.getIntExtra("position", 0);
+//            String text = data.getStringExtra("text");
+//            items.set(position, text);
+//            itemsAdapter.notifyDataSetChanged();
+//            writeItems();
+//        }
+//    }
 
     public void readItems() {
         File filesDir = getFilesDir();
@@ -118,5 +128,12 @@ public class TodoActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemEdited(int position, String text) {
+        items.set(position, text);
+        itemsAdapter.notifyDataSetChanged();
+        writeItems();
     }
 }
