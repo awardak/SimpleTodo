@@ -10,9 +10,10 @@ Completed user stories:
  * [x] Remove todo item
  * [x] Edit a todo item
  * [x] Persist todo list and retrieve them on app restart
+ * [x] Use DialogFragment instead of a new Activity to edit items
  
 Walkthrough:
 
-![Video Walkthrough](walkthrough.gif)
+![Video Walkthrough](walkthrough2.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
